@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Sign in with OTP</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form *ngIf="step === 'phone'" [formGroup]="phoneForm" (ngSubmit)="sendCode()">
+    <ion-list inset="true">
+      <ion-item>
+        <ion-label position="floating">Phone number</ion-label>
+        <ion-input inputmode="tel" placeholder="+2782..." formControlName="phone"></ion-input>
+      </ion-item>
+      <ion-note class="ion-padding-start">
+        Use international format (E.164), e.g. +27…
+      </ion-note>
+    </ion-list>
+
+    <ion-button expand="block" type="submit" [disabled]="loading || phoneForm.invalid">
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      <span *ngIf="!loading">Send Code</span>
+    </ion-button>
+  </form>
+
+  <form *ngIf="step === 'code'" [formGroup]="codeForm" (ngSubmit)="verifyCode()">
+    <ion-list inset="true">
+      <ion-item>
+        <ion-label position="floating">Enter code</ion-label>
+        <ion-input inputmode="numeric" maxlength="8" formControlName="code"></ion-input>
+      </ion-item>
+      <ion-note class="ion-padding-start">Code sent to {{ phoneStored }}</ion-note>
+    </ion-list>
+
+    <ion-button expand="block" type="submit" [disabled]="loading || codeForm.invalid">
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      <span *ngIf="!loading">Verify & Sign In</span>
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" (click)="resend()" [disabled]="resendIn>0">
+      Resend code <ng-container *ngIf="resendIn>0">({{resendIn}}s)</ng-container>
+    </ion-button>
+  </form>
+
+  <ion-text color="danger" *ngIf="error" class="ion-margin-top">{{ error }}</ion-text>
+</ion-content>
