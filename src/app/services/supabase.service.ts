@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient, Session } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private authStateSubject = new BehaviorSubject<{ event: string, session: Session | null }>({ event: 'INITIAL', session: null });
 
   constructor() {
-    // Same project + anon key as vv-app; mobile-safe storage via Capacitor
     this.supabase = createClient(environment.supa_url, environment.supa_key, {
       auth: {
         storage: {
@@ -20,6 +21,16 @@ export class SupabaseService {
         autoRefreshToken: true,
         detectSessionInUrl: true
       }
+    });
+
+    // Initialize auth state
+    this.supabase.auth.getSession().then(({ data }) => {
+      this.authStateSubject.next({ event: 'INITIAL_SESSION', session: data.session });
+    });
+
+    // Listen for auth state changes
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      this.authStateSubject.next({ event, session });
     });
   }
 
@@ -44,7 +55,10 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  onAuthStateChange(cb: (event: string, session: Session | null) => void) {
-    return this.supabase.auth.onAuthStateChange((evt, s) => cb(evt, s));
+  onAuthStateChange(callback: (event: string, session: Session | null) => void): Subscription {
+    return this.authStateSubject.subscribe(({ event, session }) => {
+      callback(event, session);
+    });
   }
+
 }

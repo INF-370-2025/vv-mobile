@@ -4,7 +4,6 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-
   {
     path: 'home',
     canActivate: [AuthGuard],
@@ -15,8 +14,18 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
   },
+  {
+    path: 'time-logs',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./pages/time-logs/time-logs.module').then(m => m.TimeLogsPageModule)
+  },
+  { path: '**', redirectTo: 'home' },
+  {
+    path: 'clock-code',
+    loadChildren: () => import('./pages/clock-code/clock-code.module').then( m => m.ClockCodePageModule)
+  }
 
-  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

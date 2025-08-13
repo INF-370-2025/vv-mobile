@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "clean": "if exist www rmdir /s /q www && if exist .angular rmdir /s /q .angular && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "private": true,
   "dependencies": {

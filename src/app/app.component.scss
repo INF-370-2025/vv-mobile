@@ -1,0 +1,53 @@
+/* Menu toggle button (3 lines) */
+.menu-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: var(--ion-color-primary);
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+
+  .menu-line {
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+  }
+}
+
+/* Menu styles */
+ion-menu {
+  ion-header {
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+      --color: white;
+    }
+  }
+
+  ion-content {
+    --background: #f8f9fa;
+
+    ion-list {
+      background: transparent;
+      padding-top: 16px;
+    }
+
+    ion-item {
+      --background: transparent;
+      --color: #495057;
+      margin-bottom: 8px;
+
+      ion-icon {
+        color: var(--ion-color-primary);
+        margin-right: 16px;
+      }
+    }
+  }
+}

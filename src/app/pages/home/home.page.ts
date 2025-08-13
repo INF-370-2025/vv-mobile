@@ -15,4 +15,11 @@ export class HomePage {
     await this.sb.signOut();
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
+
+
 }
+
+
+
+
+
