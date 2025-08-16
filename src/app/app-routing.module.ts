@@ -20,11 +20,21 @@ const routes: Routes = [
     canLoad: [AuthGuard],
     loadChildren: () => import('./pages/time-logs/time-logs.module').then(m => m.TimeLogsPageModule)
   },
-  { path: '**', redirectTo: 'home' },
   {
     path: 'clock-code',
     loadChildren: () => import('./pages/clock-code/clock-code.module').then( m => m.ClockCodePageModule)
-  }
+  },
+  {
+    path: 'clock-code',
+    loadChildren: () => import('./pages/clock-code/clock-code.module').then( m => m.ClockCodePageModule)
+  },
+  {
+    path: 'help',
+    loadChildren: () => import('./pages/help/help.module').then( m => m.HelpPageModule)
+  },
+  { path: '**', redirectTo: 'home' }
+
+
 
 ];
 
