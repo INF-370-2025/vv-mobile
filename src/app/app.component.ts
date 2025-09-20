@@ -4,6 +4,8 @@ import { SupabaseService } from './services/supabase.service';
 import { MenuController } from '@ionic/angular';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
+type AppPage = { title: string; url: string; icon: string };
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,6 +16,13 @@ export class AppComponent implements OnDestroy {
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
   private authStateSubscription: Subscription = new Subscription();
 
+  // 👉 Side menu items (add Profile here)
+  public readonly appPages: AppPage[] = [
+    { title: 'Dashboard', url: '/dashboard', icon: 'home' },
+    { title: 'Time Logs', url: '/time-logs', icon: 'time' },
+    { title: 'Profile',   url: '/profile',   icon: 'person-circle' }, // NEW
+  ];
+
   constructor(
     private supabase: SupabaseService,
     private router: Router,
@@ -22,7 +31,6 @@ export class AppComponent implements OnDestroy {
     this.checkInitialAuthState();
     this.setupAuthListener();
   }
-
 
   ngOnDestroy(): void {
     if (this.authStateSubscription) {
