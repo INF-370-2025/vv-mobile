@@ -1,0 +1,17 @@
+.profile-wrap { padding: 16px; }
+.avatar-block {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 999px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+.file-label { position: relative; cursor: pointer; }
+.file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.form { margin-top: 8px; }

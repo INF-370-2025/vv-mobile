@@ -1,16 +1,23 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient, Session } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, Session, AuthChangeEvent, User } from '@supabase/supabase-js';
 import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
+type AuthState = { event: AuthChangeEvent | 'INITIAL' | 'INITIAL_SESSION'; session: Session | null };
+
 @Injectable({ providedIn: 'root' })
 export class SupabaseService {
   private supabase: SupabaseClient;
-  private authStateSubject = new BehaviorSubject<{ event: string, session: Session | null }>({ event: 'INITIAL', session: null });
+  private authStateSubject = new BehaviorSubject<AuthState>({ event: 'INITIAL', session: null });
+  public readonly authState$: Observable<AuthState> = this.authStateSubject.asObservable();
+
+  /** Expose client for Storage/DB usage */
+  public get client(): SupabaseClient { return this.supabase; }
 
   constructor() {
     this.supabase = createClient(environment.supa_url, environment.supa_key, {
+      // Keep default schema typing ("public")
       auth: {
         storage: {
           getItem: async (key: string) => (await Preferences.get({ key })).value ?? null,
@@ -23,18 +30,18 @@ export class SupabaseService {
       }
     });
 
-    // Initialize auth state
+    // Seed initial session
     this.supabase.auth.getSession().then(({ data }) => {
       this.authStateSubject.next({ event: 'INITIAL_SESSION', session: data.session });
     });
 
-    // Listen for auth state changes
+    // Forward auth events
     this.supabase.auth.onAuthStateChange((event, session) => {
       this.authStateSubject.next({ event, session });
     });
   }
 
-  // --- OTP flow: identical methods you use on web ---
+  // OTP (SMS)
   sendOtp(phoneE164: string, shouldCreateUser = true) {
     return this.supabase.auth.signInWithOtp({
       phone: phoneE164,
@@ -46,9 +53,29 @@ export class SupabaseService {
     return this.supabase.auth.verifyOtp({ phone: phoneE164, token, type: 'sms' });
   }
 
-  // session helpers (guards, auto-login)
+  // Session helpers
   getSession() {
     return this.supabase.auth.getSession(); // { data: { session }, error }
+  }
+
+  async getCurrentUserUuid(): Promise<string | null> {
+    const { data } = await this.supabase.auth.getSession();
+    return data?.session?.user?.id ?? null;
+  }
+
+  // Add this method to get full user info
+  async getCurrentUser(): Promise<User | null> {
+    const { data } = await this.supabase.auth.getSession();
+    return data?.session?.user ?? null;
+  }
+
+  // Add this method to get user with metadata
+  async getCurrentUserWithMetadata(): Promise<{ user: User | null; metadata: any }> {
+    const { data } = await this.supabase.auth.getSession();
+    return {
+      user: data?.session?.user ?? null,
+      metadata: data?.session?.user?.user_metadata ?? null
+    };
   }
 
   signOut() {
@@ -56,9 +83,21 @@ export class SupabaseService {
   }
 
   onAuthStateChange(callback: (event: string, session: Session | null) => void): Subscription {
-    return this.authStateSubject.subscribe(({ event, session }) => {
-      callback(event, session);
-    });
+    return this.authState$.subscribe(({ event, session }) => callback(event, session));
   }
 
+  // Add this method for better error handling
+  async safeGetCurrentUserUuid(): Promise<string | null> {
+    try {
+      const { data, error } = await this.supabase.auth.getSession();
+      if (error) {
+        console.error('Error getting session:', error);
+        return null;
+      }
+      return data?.session?.user?.id ?? null;
+    } catch (error) {
+      console.error('Exception getting user UUID:', error);
+      return null;
+    }
+  }
 }

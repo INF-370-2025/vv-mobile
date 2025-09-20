@@ -1,13 +1,116 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>My Profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loaded UI -->
+  <ng-container *ngIf="!loading; else skeleton">
+    <div class="profile-wrap">
+      <!-- Avatar -->
+      <div class="avatar-block" style="text-align:center; padding:20px;">
+        <img
+          [src]="imgSrc"
+          alt="avatar"
+          class="avatar"
+          style="width:100px; height:100px; border-radius:50%; object-fit:cover;"
+        />
+        <ion-button size="small" style="margin-top:10px;">
+          <label class="file-label">
+            Change
+            <input type="file" accept="image/*" (change)="onAvatarPicked($event)" style="display:none;" />
+          </label>
+        </ion-button>
+        <ion-note *ngIf="uploading" style="display:block; margin-top:5px;">Uploading…</ion-note>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="form" novalidate class="form">
+        <ion-list inset="true">
+          <ion-item>
+            <ion-input
+              label="Name"
+              labelPlacement="stacked"
+              formControlName="name"
+              [value]="form.get('name')?.value"
+              [placeholder]="currentEmployee?.name || ''">
+            </ion-input>
+          </ion-item>
+          <ion-note *ngIf="form.get('name')?.touched && form.get('name')?.invalid" color="danger" class="pad-note">
+            Name is required
+          </ion-note>
+
+          <ion-item>
+            <ion-input
+              label="Surname"
+              labelPlacement="stacked"
+              formControlName="surname"
+              [value]="form.get('surname')?.value"
+              [placeholder]="currentEmployee?.surname || ''">
+            </ion-input>
+          </ion-item>
+          <ion-note *ngIf="form.get('surname')?.touched && form.get('surname')?.invalid" color="danger" class="pad-note">
+            Surname is required
+          </ion-note>
+
+          <ion-item>
+            <ion-input
+              type="email"
+              label="Email"
+              labelPlacement="stacked"
+              formControlName="email_address"
+              [value]="form.get('email_address')?.value"
+              [placeholder]="currentEmployee?.email_address || ''">
+            </ion-input>
+          </ion-item>
+          <ion-note *ngIf="form.get('email_address')?.touched && form.get('email_address')?.invalid" color="danger" class="pad-note">
+            Enter a valid email
+          </ion-note>
+
+          <ion-item>
+            <ion-input
+              type="tel"
+              label="Phone"
+              labelPlacement="stacked"
+              formControlName="phone_number"
+              [value]="form.get('phone_number')?.value"
+              [placeholder]="currentEmployee?.phone_number || ''">
+            </ion-input>
+          </ion-item>
+          <ion-note *ngIf="form.get('phone_number')?.touched && form.get('phone_number')?.invalid" color="danger" class="pad-note">
+            Phone is required
+          </ion-note>
+        </ion-list>
+
+        <ion-button
+          expand="block"
+          (click)="save()"
+          [disabled]="saving || uploading || form.invalid || !employeeId"
+          style="margin:20px;">
+          <ion-spinner *ngIf="saving" name="dots"></ion-spinner>
+          <span *ngIf="!saving">Save</span>
+        </ion-button>
+      </form>
+    </div>
+  </ng-container>
+
+  <!-- Skeleton while loading -->
+  <ng-template #skeleton>
+    <div style="padding:20px;">
+      <ion-skeleton-text [animated]="true"
+        style="width:100px; height:100px; border-radius:50%; margin:0 auto;">
+      </ion-skeleton-text>
+      <ion-list inset="true" style="margin-top:20px;">
+        <ion-item *ngFor="let i of [1,2,3,4]">
+          <ion-skeleton-text [animated]="true" style="width:100%"></ion-skeleton-text>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ng-template>
 </ion-content>
