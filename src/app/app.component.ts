@@ -24,7 +24,7 @@ export class AppComponent implements OnDestroy {
     { title: 'Dashboard', url: '/dashboard', icon: 'home' },
     { title: 'Time Logs', url: '/time-logs', icon: 'time' },
     { title: 'Profile',   url: '/profile',   icon: 'person-circle' },
-    { title: 'Payslips', url: '/payslips', icon: 'time' }, 
+    { title: 'Payslips', url: '/payslips', icon: 'time' },
     { title: 'Warnings', url: '/warnings', icon: 'time' },// NEW
   ];
 
@@ -32,7 +32,7 @@ export class AppComponent implements OnDestroy {
     private supabase: SupabaseService,
     private router: Router,
     private menuCtrl: MenuController,
-    private authService: AuthService
+    public authService: AuthService
   ) {
     this.checkInitialAuthState();
     this.setupAuthListener();
