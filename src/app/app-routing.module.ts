@@ -55,7 +55,15 @@ const routes: Routes = [
     loadChildren: () => import('./pages/payslips/payslips.module').then( m => m.PayslipsPageModule)
   },
 
+  {
+    path: 'warnings',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./pages/warnings/warnings.module').then( m => m.WarningsPageModule)
+  },
+
   { path: '**', redirectTo: 'home' },
+
 
 ];
 

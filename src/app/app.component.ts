@@ -21,7 +21,8 @@ export class AppComponent implements OnDestroy {
     { title: 'Dashboard', url: '/dashboard', icon: 'home' },
     { title: 'Time Logs', url: '/time-logs', icon: 'time' },
     { title: 'Profile',   url: '/profile',   icon: 'person-circle' },
-    { title: 'Payslips', url: '/payslips', icon: 'time' }, // NEW
+    { title: 'Payslips', url: '/payslips', icon: 'time' }, 
+    { title: 'Warnings', url: '/warnings', icon: 'time' },// NEW
   ];
 
   constructor(
