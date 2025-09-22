@@ -40,29 +40,29 @@ export class TimeLogsPage implements OnInit {
   }
 
 // time-logs.page.ts
-  async loadTimeLogs() {
-    this.loading = true;
-    this.error = null;
+async loadTimeLogs() {
+  this.loading = true;
+  this.error = null;
 
-    try {
-      if (!this.employeeId) {
-        throw new Error('Employee ID not available');
-      }
-
-      const response = await this.api.get_employee_time_logs_by_id(this.employeeId).toPromise();
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      this.timeLogs = response;
-    } catch (err) {
-      console.error('Failed to load time logs:', err);
-      this.error = 'Failed to load time logs. Please try again.';
-    } finally {
-      this.loading = false;
+  try {
+    if (!this.employeeId) {
+      throw new Error('Employee ID not available');
     }
+
+    const response = await this.api.get_employee_time_logs_by_id(this.employeeId).toPromise();
+
+    if (response.error) {
+      throw new Error(response.error);
+    }
+
+    this.timeLogs = response;
+  } catch (err) {
+    console.error('Failed to load time logs:', err);
+    this.error = 'Failed to load time logs. Please try again.';
+  } finally {
+    this.loading = false;
   }
+}
 
   formatDateTime(datetime: string): string {
     if (!datetime) return 'N/A';
