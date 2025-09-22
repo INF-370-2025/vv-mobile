@@ -20,7 +20,8 @@ export class AppComponent implements OnDestroy {
   public readonly appPages: AppPage[] = [
     { title: 'Dashboard', url: '/dashboard', icon: 'home' },
     { title: 'Time Logs', url: '/time-logs', icon: 'time' },
-    { title: 'Profile',   url: '/profile',   icon: 'person-circle' }, // NEW
+    { title: 'Profile',   url: '/profile',   icon: 'person-circle' },
+    { title: 'Payslips', url: '/payslips', icon: 'time' }, // NEW
   ];
 
   constructor(

@@ -74,5 +74,13 @@ export class ApiService {
   update_employee(employee_id: number, employee: any): Observable<any> {
     return this.http.put<any>(`${environment.api_url}${this.employees_ep}/update_employee/${employee_id}`, employee);
   }
+
+   get_employee_warnings() {
+    return this.http.get<any>(environment.api_url + this.employees_ep + `/get_employee_warnings`);
+  }
+
+  get_employee_payslips() {
+    return this.http.get<any>(environment.api_url + this.employees_ep + `/get_pay_slips`);
+  }
   //#endregion
 }

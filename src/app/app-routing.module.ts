@@ -48,7 +48,15 @@ const routes: Routes = [
       import('./pages/profile/profile.module').then(m => m.ProfilePageModule),
   },
 
+    {
+    path: 'payslips',
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./pages/payslips/payslips.module').then( m => m.PayslipsPageModule)
+  },
+
   { path: '**', redirectTo: 'home' },
+
 ];
 
 @NgModule({

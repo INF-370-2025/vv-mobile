@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Payslips</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Payslips</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+<ng-container>
+<ion-list >
+  @for (payslip of filteredPayslips; track payslip.employee_pay_slip_id) {
+    <ion-row><ion-label>
+          Id: {{ payslip.employee_pay_slip_id }}
+    </ion-label></ion-row>
+    <br>
+    <ion-row><ion-label>
+          Date: {{ payslip.created_at }}
+    </ion-label></ion-row>
+    <br>
+    <ion-button [href]="payslip.payslip_url" target="_blank" *ngIf="payslip.payslip_url">View Payslip</ion-button>
+  <br>
+  <div>
+    <br>
+    <br>
+    <br>
+  </div>
+  }
+</ion-list>
+</ng-container>
+</ion-content>
