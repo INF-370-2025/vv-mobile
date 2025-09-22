@@ -49,15 +49,6 @@ const routes: Routes = [
   },
 
   { path: '**', redirectTo: 'home' },
-  {
-    path: 'warnings',
-    loadChildren: () => import('./pages/warnings/warnings.module').then( m => m.WarningsPageModule)
-  },
-  {
-    path: 'payslips',
-    loadChildren: () => import('./pages/payslips/payslips.module').then( m => m.PayslipsPageModule)
-  },
-
 ];
 
 @NgModule({
