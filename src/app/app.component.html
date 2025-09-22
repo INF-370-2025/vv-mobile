@@ -54,10 +54,22 @@
           <ion-label>Time Logs</ion-label>
         </ion-item>
 
-        <ion-item button routerLink="/help" routerDirection="root" (click)="closeMenu()">
-          <ion-icon name="help-outline" slot="start"></ion-icon>
-          <ion-label>Help</ion-label>
-        </ion-item>
+          <!-- ✅ NEW: Warnings -->
+          <ion-item button routerLink="/warnings" routerDirection="root" (click)="closeMenu()">
+            <ion-icon name="alert-circle" slot="start"></ion-icon>
+            <ion-label>Warnings</ion-label>
+          </ion-item>
+
+          <!-- ✅ NEW: Payslips -->
+          <ion-item button routerLink="/payslips" routerDirection="root" (click)="closeMenu()">
+            <ion-icon name="person-circle" slot="start"></ion-icon>
+            <ion-label>Payslips</ion-label>
+          </ion-item>
+
+          <ion-item button routerLink="/help" routerDirection="root" (click)="closeMenu()">
+            <ion-icon name="help-outline" slot="start"></ion-icon>
+            <ion-label>Help</ion-label>
+          </ion-item>
 
         <ion-item button routerLink="/job-cards" routerDirection="root" (click)="closeMenu()">
           <ion-icon name="briefcase" slot="start"></ion-icon>

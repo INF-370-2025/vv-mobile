@@ -147,5 +147,13 @@ export class ApiService {
       `${environment.api_url}${this.job_cards_ep}/get_job_cards_employee_with_details/${employeeId}`
     );
   }
+
+   get_employee_warnings() {
+    return this.http.get<any>(environment.api_url + this.employees_ep + `/get_employee_warnings`);
+  }
+
+  get_employee_payslips() {
+    return this.http.get<any>(environment.api_url + this.employees_ep + `/get_pay_slips`);
+  }
   //#endregion
 }
