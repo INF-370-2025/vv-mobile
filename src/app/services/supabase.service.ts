@@ -53,6 +53,59 @@ export class SupabaseService {
     return this.supabase.auth.verifyOtp({ phone: phoneE164, token, type: 'sms' });
   }
 
+
+
+  async uploadFileToStorage(file: File, bucket: string): Promise<string> {
+    if (!file) throw new Error("Invalid file");
+
+    const extension = file.name.split(".").pop() ?? "png";
+    const fileName = `${new Date().getTime()}.${extension}`;
+
+    const { error: uploadError } = await this.supabase
+      .storage
+      .from(bucket)
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false, // prevent overwriting old files
+      });
+
+    if (uploadError) {
+      console.error("Upload error:", uploadError.message);
+      throw uploadError;
+    }
+
+    // Get the public URL
+    const { data } = this.supabase
+      .storage
+      .from(bucket)
+      .getPublicUrl(fileName);
+
+    return data.publicUrl;
+  }
+
+  async update_profile_pic(user_id: number, url: string | null) {
+    try {
+      const { data, error } = await this.supabase
+        .schema(environment.schema)
+        .from('user')
+        .update({ image: url })
+        .eq('user_id', user_id);
+
+      if (error) {
+        console.error(error);
+        return null;
+      }
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+
+
+
+
   // Session helpers
   getSession() {
     return this.supabase.auth.getSession(); // { data: { session }, error }

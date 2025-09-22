@@ -38,6 +38,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/help/help.module').then(m => m.HelpPageModule),
   },
+  {path: 'job-cards',
+    loadChildren: () =>
+      import('./pages/job-cards/job-cards.module').then(m => m.JobCardsPageModule)
+  },
 
   // 🔹 NEW: Profile (guarded)
   {
