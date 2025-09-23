@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { employeeWarning } from 'src/app/models/employee';
+import { email } from 'src/app/models/general';
 import { AuthGuard } from 'src/app/guards/auth.guard';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -14,12 +15,14 @@ export class WarningsPage implements OnInit {
   employeeWarnings:employeeWarning[] = [];
   filteredWarnings:employeeWarning[] = [];
   employeeId:number;
+  email:string;
 
   constructor(private apiService:ApiService, private auth: AuthService) { }
 
   ngOnInit() {
     this.auth.getEmployee().subscribe(employee => {
       this.employeeId = employee?.employee_id || null;
+      this.email = employee?.email;
     });
     this.loadWarnings();
   }
@@ -55,5 +58,20 @@ export class WarningsPage implements OnInit {
         }
       });
       this.loadWarnings();
+
+      let newEmail = new email();
+    newEmail.to_email = "vaultvisioninf370@gmail.com";
+    newEmail.subject = "Warning Dispute";
+    newEmail.body = "Good day admin, this email is to notify you that warning #" + disputedWarning.employee_warning_id + " is being disputed.";
+
+    this.apiService.send_email(newEmail).subscribe({
+      next: (res) => {
+        console.log('Success', 'Email sent successfully');
+      },
+      error: (err) => {
+        console.error('Error', 'Failed to send email');
+        console.log(newEmail);
+      }
+    });
   }
 }

@@ -163,4 +163,12 @@ export class ApiService {
     return this.http.get<any>(environment.api_url + this.employees_ep + `/get_pay_slips`);
   }
   //#endregion
+
+  //email region
+
+  send_email(email: any) {
+    return this.http.post<any>(environment.api_url + 'send-email', email);
+  }
+
+  //#endregion
 }
