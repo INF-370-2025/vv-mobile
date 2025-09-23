@@ -16,6 +16,7 @@ export class WarningsPage implements OnInit {
   filteredWarnings:employeeWarning[] = [];
   employeeId:number;
   email:string;
+  isLoading = true;
 
   constructor(private apiService:ApiService, private auth: AuthService) { }
 
@@ -38,6 +39,8 @@ export class WarningsPage implements OnInit {
     this.filteredWarnings = this.employeeWarnings.filter(x => x.employee_id == this.employeeId);
     this.filteredWarnings.sort((a, b) => b.employee_warning_id - a.employee_warning_id)
     console.log(this.filteredWarnings);
+    this.isLoading = false;
+
   }
 
   updateWarning(disputedWarning:employeeWarning) {

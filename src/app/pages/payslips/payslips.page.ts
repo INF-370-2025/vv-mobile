@@ -15,6 +15,7 @@ export class PayslipsPage implements OnInit {
   employeePayslips:employeePayslip[] = [];
   filteredPayslips:employeePayslip[] = [];
   employeeId:number;
+  isLoading = true;
 
   constructor(private apiService:ApiService, private auth: AuthService) { }
 
@@ -46,6 +47,7 @@ export class PayslipsPage implements OnInit {
     this.filteredPayslips = this.employeePayslips.filter(x => x.employee_id == this.employeeId);
     this.filteredPayslips.sort((a, b) => b.employee_pay_slip_id - a.employee_pay_slip_id)
     console.log(this.filteredPayslips);
+    this.isLoading = false;
   }
 
 }
