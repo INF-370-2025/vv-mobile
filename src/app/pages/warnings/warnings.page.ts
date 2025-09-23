@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
+import { employeeWarning } from 'src/app/models/employee';
+import { AuthGuard } from 'src/app/guards/auth.guard';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-warnings',
@@ -7,10 +11,49 @@ import { Component, OnInit } from '@angular/core';
   standalone: false,
 })
 export class WarningsPage implements OnInit {
+  employeeWarnings:employeeWarning[] = [];
+  filteredWarnings:employeeWarning[] = [];
+  employeeId:number;
 
-  constructor() { }
+  constructor(private apiService:ApiService, private auth: AuthService) { }
 
   ngOnInit() {
+    this.auth.getEmployee().subscribe(employee => {
+      this.employeeId = employee?.employee_id || null;
+    });
+    this.loadWarnings();
   }
 
+  async loadWarnings(): Promise<void> {
+     try {
+    const response = await this.apiService.get_employee_warnings().toPromise();
+    this.employeeWarnings = response;
+  } catch (err) {
+    console.error('Failed to load warnings:', err);
+  } finally {
+  }
+    this.filteredWarnings = this.employeeWarnings.filter(x => x.employee_id == this.employeeId);
+    this.filteredWarnings.sort((a, b) => b.employee_warning_id - a.employee_warning_id)
+    console.log(this.filteredWarnings);
+  }
+
+  updateWarning(disputedWarning:employeeWarning) {
+    let updatedWarning = new employeeWarning();
+
+    updatedWarning.employee_id = disputedWarning.employee_id;
+    updatedWarning.employee_warning_id = disputedWarning.employee_warning_id;
+    updatedWarning.employee_warning_type_id = disputedWarning.employee_warning_type_id;
+    updatedWarning.reason = disputedWarning.reason;
+    updatedWarning.is_disputed = true;
+
+    this.apiService.update_employee_warning(updatedWarning.employee_warning_id, updatedWarning).subscribe({
+        next: res => {
+          console.log("Warning is disputed");
+        },
+        error: (error) => {
+          console.error("An Error Occoured while disputing the warning");
+        }
+      });
+      this.loadWarnings();
+  }
 }
