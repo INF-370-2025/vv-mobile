@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 export class ApiService {
   private employee_time_logs_ep = 'employee_time_logs';
   private users_ep = 'users';
-  private employees_ep = 'employee';
+  private employees_ep = 'employees';
   private job_cards_ep = 'job_cards';
   private job_requests_ep = 'job_requests';   // ✅ add endpoint name
 
@@ -150,6 +150,13 @@ export class ApiService {
 
    get_employee_warnings() {
     return this.http.get<any>(environment.api_url + this.employees_ep + `/get_employee_warnings`);
+  }
+
+  update_employee_warning(employee_warning_id: number, employee_warning: any) {
+    return this.http.put<any>(
+      environment.api_url + this.employees_ep + `/update_employee_warning/${employee_warning_id}`,
+      employee_warning
+    );
   }
 
   get_employee_payslips() {

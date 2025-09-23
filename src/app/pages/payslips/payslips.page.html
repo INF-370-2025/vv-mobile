@@ -23,7 +23,7 @@
           Date: {{ payslip.created_at }}
     </ion-label></ion-row>
     <br>
-    <ion-button [href]="payslip.payslip_url" target="_blank" *ngIf="payslip.payslip_url">View Payslip</ion-button>
+    <ion-button [href]="payslip.payslip_url" target="_blank" *ngIf="payslip.payslip_url" slot="end" fill="outline" size="small">View Payslip</ion-button>
   <br>
   <div>
     <br>
